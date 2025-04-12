@@ -6,7 +6,6 @@ import {
   Box,
   Button,
   Center,
-  Flex,
   Heading,
   Icon,
   Text,
@@ -18,7 +17,7 @@ import axios from 'axios'
 export default function FileUpload() {
   const [file, setFile] = useState<File | null>(null)
   const [isLoading, setIsLoading] = useState(false)
-  const [analysisResult, setAnalysisResult] = useState<any>(null)
+  const [analysisResult, setAnalysisResult] = useState<Record<string, unknown> | null>(null)
   const toast = useToast()
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
