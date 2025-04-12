@@ -1,10 +1,25 @@
-# Getting Started with Create React App
+# DataHammer
+
+DataHammer is a powerful drag-and-drop tool for data analytics and insights. Simply upload your spreadsheet, click run, and get instant insights from your data.
+
+## Features
+
+- **Simple Interface**: Upload your data and get insights with just a few clicks
+- **Drag and Drop**: Intuitive drag-and-drop interface for data exploration
+- **Automated Insights**: Automatically detect patterns and generate insights
+- **Interactive Visualizations**: Explore your data with interactive charts and graphs
+- **Export Options**: Export your insights in multiple formats
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
 
 In the project directory, you can run:
+
+### `npm run dev`
+
+Runs the app in development mode using Vite.\
+This is the recommended way to run the app during development as it provides faster refresh times.
 
 ### `npm start`
 
@@ -63,7 +78,15 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/a
 
 ### Deployment
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+The application is deployed using GitHub Pages. To deploy the latest version:
+
+```bash
+npm run deploy
+```
+
+This will build the application and deploy it to the GitHub Pages site.
+
+For more information about deployment options, see: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
 
 ### `npm run build` fails to minify
 
