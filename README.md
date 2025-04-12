@@ -92,7 +92,3 @@ To configure GitHub Pages:
 2. Navigate to Pages
 3. Select the `gh-pages` branch as the source
 4. Add your Firebase secrets to the repository secrets
-
-## License
-
-MIT
