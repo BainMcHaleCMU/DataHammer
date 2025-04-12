@@ -6,7 +6,7 @@ const nextConfig = {
   },
   // Add basePath for GitHub Pages deployment
   // Comment this out for local development
-  // basePath: '/your-repo-name',
+  basePath: '/DataHammer',
 };
 
 module.exports = nextConfig;
