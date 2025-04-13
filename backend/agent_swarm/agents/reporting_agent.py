@@ -5,8 +5,10 @@ This module defines the ReportingAgent class for compiling final results into a 
 """
 
 from typing import Any, Dict, List, Optional
+import logging
 
 from .base_agent import BaseAgent
+from ..llama_workflow.task_agents import ReportingTaskAgent
 
 
 class ReportingAgent(BaseAgent):
@@ -23,6 +25,8 @@ class ReportingAgent(BaseAgent):
     def __init__(self):
         """Initialize the Reporting Agent."""
         super().__init__(name="ReportingAgent")
+        self.logger = logging.getLogger(__name__)
+        self.task_agent = ReportingTaskAgent()
     
     def run(self, environment: Dict[str, Any], **kwargs) -> Dict[str, Any]:
         """
@@ -39,13 +43,42 @@ class ReportingAgent(BaseAgent):
                 - report: The final report content or reference
                 - visualization_requests: List of final visualization requests
         """
-        # This is a dummy implementation
-        # In a real implementation, this would synthesize information from
-        # the environment and generate an actual report
+        # Extract report format and sections from kwargs
+        report_format = kwargs.get("report_format", "jupyter")
+        sections = kwargs.get("sections", [])
         
-        return {
-            "report": "path/to/final_report.ipynb",
-            "visualization_requests": [
+        self.logger.info(f"Generating report in {report_format} format")
+        
+        # Use the task agent to generate the report
+        task_input = {
+            "environment": environment,
+            "goals": ["Generate comprehensive data analysis report"],
+            "report_format": report_format,
+            "sections": sections
+        }
+        
+        try:
+            # Run the task agent
+            result = self.task_agent.run(task_input)
+            
+            # Extract the results
+            report_path = result.get("Report.path", "path/to/final_report.ipynb")
+            report_content = result.get("Report.content", {})
+            
+            # Generate final visualization requests
+            visualization_requests = [
                 {"type": "summary_plot", "data": "all_results"}
             ]
-        }
+            
+            return {
+                "report": report_path,
+                "report_content": report_content,
+                "visualization_requests": visualization_requests
+            }
+        except Exception as e:
+            self.logger.error(f"Error generating report: {str(e)}")
+            return {
+                "error": str(e),
+                "report": None,
+                "visualization_requests": []
+            }

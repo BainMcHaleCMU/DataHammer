@@ -5,8 +5,13 @@ This module defines the DataLoadingAgent class for ingesting data from various s
 """
 
 from typing import Any, Dict, List, Optional
+import logging
+import pandas as pd
+import json
+import os
 
 from .base_agent import BaseAgent
+from ..llama_workflow.task_agents import DataLoadingTaskAgent
 
 
 class DataLoadingAgent(BaseAgent):
@@ -24,6 +29,8 @@ class DataLoadingAgent(BaseAgent):
     def __init__(self):
         """Initialize the Data Loading Agent."""
         super().__init__(name="DataLoadingAgent")
+        self.logger = logging.getLogger(__name__)
+        self.task_agent = DataLoadingTaskAgent()
     
     def run(self, environment: Dict[str, Any], **kwargs) -> Dict[str, Any]:
         """
@@ -41,12 +48,44 @@ class DataLoadingAgent(BaseAgent):
                 - schema: Initial data schema
                 - suggestions: List of suggested next steps
         """
-        # This is a dummy implementation
-        # In a real implementation, this would use the CodeActAgent to execute
-        # data loading code and return actual results
+        # Extract data sources from kwargs or environment
+        data_sources = kwargs.get("data_sources", {})
+        if not data_sources and "data_sources" in environment:
+            data_sources = environment["data_sources"]
         
-        return {
-            "loaded_data": "path/to/loaded_data",
-            "schema": {"columns": ["col1", "col2"], "types": ["int", "str"]},
-            "suggestions": ["Run ExplorationAgent to analyze the loaded data"]
+        file_type = kwargs.get("file_type")
+        
+        self.logger.info(f"Loading data from {len(data_sources)} sources")
+        
+        # Use the task agent to load the data
+        task_input = {
+            "environment": environment,
+            "goals": ["Load and prepare data for analysis"],
+            "data_sources": data_sources,
+            "file_type": file_type
         }
+        
+        try:
+            # Run the task agent
+            result = self.task_agent.run(task_input)
+            
+            # Extract the results
+            loaded_data = result.get("Data Overview.raw_data", {})
+            schema = result.get("Data Overview.schema", {})
+            
+            # Add suggestions for next steps
+            suggestions = ["Run ExplorationAgent to analyze the loaded data"]
+            
+            return {
+                "loaded_data": loaded_data,
+                "schema": schema,
+                "suggestions": suggestions
+            }
+        except Exception as e:
+            self.logger.error(f"Error loading data: {str(e)}")
+            return {
+                "error": str(e),
+                "loaded_data": None,
+                "schema": None,
+                "suggestions": ["Check data source paths and formats"]
+            }

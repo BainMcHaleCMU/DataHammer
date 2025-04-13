@@ -5,8 +5,10 @@ This module defines the CleaningAgent class for preprocessing and cleaning data.
 """
 
 from typing import Any, Dict, List, Optional
+import logging
 
 from .base_agent import BaseAgent
+from ..llama_workflow.task_agents import CleaningTaskAgent
 
 
 class CleaningAgent(BaseAgent):
@@ -24,6 +26,8 @@ class CleaningAgent(BaseAgent):
     def __init__(self):
         """Initialize the Cleaning Agent."""
         super().__init__(name="CleaningAgent")
+        self.logger = logging.getLogger(__name__)
+        self.task_agent = CleaningTaskAgent()
     
     def run(self, environment: Dict[str, Any], **kwargs) -> Dict[str, Any]:
         """
@@ -41,16 +45,44 @@ class CleaningAgent(BaseAgent):
                 - cleaning_steps: List of cleaning steps applied
                 - suggestions: List of suggested next steps
         """
-        # This is a dummy implementation
-        # In a real implementation, this would use the CodeActAgent to execute
-        # data cleaning code and return actual results
+        # Extract data reference from kwargs or environment
+        data_reference = kwargs.get("data_reference")
+        if not data_reference and "loaded_data" in environment:
+            data_reference = environment["loaded_data"]
         
-        return {
-            "cleaned_data": "path/to/cleaned_data",
-            "cleaning_steps": [
-                "Imputed missing values in column X using mean",
-                "Removed outliers using IQR method",
-                "Converted column Y to categorical"
-            ],
-            "suggestions": ["Run ExplorationAgent again on cleaned data"]
+        cleaning_strategies = kwargs.get("cleaning_strategies", {})
+        
+        self.logger.info(f"Cleaning data: {data_reference}")
+        
+        # Use the task agent to clean the data
+        task_input = {
+            "environment": environment,
+            "goals": ["Clean and preprocess data for analysis"],
+            "data_reference": data_reference,
+            "cleaning_strategies": cleaning_strategies
         }
+        
+        try:
+            # Run the task agent
+            result = self.task_agent.run(task_input)
+            
+            # Extract the results
+            processed_data = result.get("Cleaned Data.processed_data", {})
+            cleaning_steps = result.get("Cleaned Data.cleaning_steps", [])
+            
+            # Add suggestions for next steps
+            suggestions = ["Run ExplorationAgent again on cleaned data"]
+            
+            return {
+                "cleaned_data": processed_data,
+                "cleaning_steps": cleaning_steps,
+                "suggestions": suggestions
+            }
+        except Exception as e:
+            self.logger.error(f"Error cleaning data: {str(e)}")
+            return {
+                "error": str(e),
+                "cleaned_data": None,
+                "cleaning_steps": [],
+                "suggestions": ["Check data format and try again"]
+            }
