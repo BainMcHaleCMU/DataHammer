@@ -1,12 +1,12 @@
-# LlamaIndex Agent Workflow for Data Science
+# Agent Workflow for Data Science
 
-This module provides dynamic workflow planning and execution capabilities for the DataHammer AI Agent Swarm using LlamaIndex's AgentWorkflow.
+This module provides dynamic workflow planning and execution capabilities for the DataHammer AI Agent Swarm using a custom AgentWorkflow implementation.
 
 ## Components
 
 ### WorkflowManager
 
-Manages LlamaIndex agent workflows for data science tasks, responsible for:
+Manages agent workflows for data science tasks, responsible for:
 - Creating and configuring task agents
 - Building dynamic workflows based on user goals
 - Executing workflows and tracking progress
@@ -26,7 +26,7 @@ Specialized agents for different data science tasks:
 
 ## Usage
 
-The LlamaIndex workflow module is used by the OrchestratorAgent to dynamically plan and execute workflows based on user goals and data characteristics.
+The workflow module is used by the OrchestratorAgent to dynamically plan and execute workflows based on user goals and data characteristics.
 
 ```python
 # Initialize the workflow manager
@@ -55,9 +55,9 @@ updated_env = workflow_manager.execute_workflow(environment)
 2. As tasks complete, their results are added to the environment
 3. The workflow continues until all tasks are completed
 
-## Integration with LlamaIndex
+## Workflow Features
 
-This workflow system directly uses LlamaIndex's AgentWorkflow, which provides:
+This workflow system provides:
 - Task-based workflow execution
 - Dependency management between tasks
 - Parallel execution of independent tasks

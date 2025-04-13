@@ -1,7 +1,7 @@
 """
 Analysis Task Agent Module
 
-This module defines the analysis task agent used in LlamaIndex agent workflows.
+This module defines the analysis task agent used in agent workflows.
 """
 
 from typing import Any, Dict, List, Optional, Tuple, Union
@@ -9,7 +9,7 @@ import logging
 import traceback
 from collections import defaultdict
 
-from llama_index.core.llms import LLM
+from ..custom_framework.llm import LLM
 
 from .base import BaseTaskAgent
 

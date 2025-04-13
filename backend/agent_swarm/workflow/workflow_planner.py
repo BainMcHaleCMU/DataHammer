@@ -6,8 +6,8 @@ This module defines the WorkflowPlanner class that dynamically plans workflows b
 
 from typing import Any, Dict, List, Optional
 import uuid
-from llama_index.core.llms import LLM
-from llama_index.core.settings import Settings
+from ..custom_framework.llm import LLM
+from ..custom_framework.settings import Settings
 
 from .workflow_step import WorkflowStep
 from .workflow_graph import WorkflowGraph

@@ -1,18 +1,18 @@
 """
 Workflow Manager Module
 
-This module defines the WorkflowManager class that manages LlamaIndex agent workflows.
+This module defines the WorkflowManager class that manages agent workflows.
 """
 
 from typing import Any, Dict, List, Optional, Tuple, Type
 import logging
 from datetime import datetime
 
-from llama_index.core.llms import LLM
-from llama_index.core.settings import Settings
-from llama_index.experimental.agent_workflow import AgentWorkflow
-from llama_index.experimental.agent_workflow import Task as WorkflowTask
-from llama_index.experimental.agent_workflow import TaskOutput
+from ..custom_framework.llm import LLM
+from ..custom_framework.settings import Settings
+from ..custom_framework.agent_workflow import AgentWorkflow
+from ..custom_framework.agent_workflow import Task as WorkflowTask
+from ..custom_framework.agent_workflow import TaskOutput
 
 from .task_agents import (
     DataLoadingTaskAgent,
@@ -28,7 +28,7 @@ from .task_agents import (
 
 class WorkflowManager:
     """
-    Manages LlamaIndex agent workflows for data science tasks.
+    Manages agent workflows for data science tasks.
     
     The WorkflowManager is responsible for:
     - Creating and configuring task agents

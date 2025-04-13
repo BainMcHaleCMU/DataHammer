@@ -1,16 +1,16 @@
 """
 Base Task Agent Module
 
-This module defines the base task agent class used in LlamaIndex agent workflows.
+This module defines the base task agent class used in agent workflows.
 """
 
 from typing import Any, Dict, List, Optional
 import logging
 from abc import ABC, abstractmethod
 
-from llama_index.core.llms import LLM
-from llama_index.core.settings import Settings
-from llama_index.experimental.agent_workflow import TaskAgent
+from ..custom_framework.llm import LLM
+from ..custom_framework.settings import Settings
+from ..custom_framework.agent_workflow import TaskAgent
 
 
 class BaseTaskAgent(TaskAgent, ABC):

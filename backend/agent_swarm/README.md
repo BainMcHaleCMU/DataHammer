@@ -1,6 +1,6 @@
 # AI Agent Swarm for Data Science
 
-This module implements an AI Agent Swarm for automating the end-to-end data science workflow. The system leverages a multi-agent architecture built using LlamaIndex and powered by Google's Gemini `flash-lite` language model (via Google AI Studio API).
+This module implements an AI Agent Swarm for automating the end-to-end data science workflow. The system leverages a multi-agent architecture built using a custom agent framework and powered by Google's Gemini `flash-lite` language model (via Google AI Studio API).
 
 ## System Overview
 
@@ -84,7 +84,6 @@ The `CodeActAgent` executes arbitrary code, which is inherently risky. The curre
 
 ## Dependencies
 
-- LlamaIndex
 - Google Gemini API
 - nbformat
 - Jupyter
