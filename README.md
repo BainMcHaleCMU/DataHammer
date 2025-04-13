@@ -47,12 +47,6 @@ A completely revamped Next.js application with Chakra UI and TypeScript for data
    npm install
    ```
 
-3. Install backend dependencies:
-   ```bash
-   cd backend
-   pip install fastapi uvicorn pandas numpy scikit-learn matplotlib seaborn
-   ```
-
 ### Configuration
 
 No additional configuration is needed for the demo version.
