@@ -6,12 +6,14 @@ export default defineConfig({
   plugins: [react()],
   server: {
     host: '0.0.0.0',
-    port: 3000,
-    strictPort: false,  // Changed to false to allow fallback to another port if 3000 is in use
+    port: 12000,
+    strictPort: false,  // Changed to false to allow fallback to another port if 12000 is in use
     headers: {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
       'Access-Control-Allow-Headers': 'X-Requested-With, content-type, Authorization',
     },
+    cors: true,
+    allowedHosts: true,
   },
 });

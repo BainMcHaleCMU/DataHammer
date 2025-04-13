@@ -44,7 +44,8 @@ export default function HomeClient() {
     setIsProcessing(true);
     
     try {
-      const result = await processData(insights, dataType);
+      // Pass the file to the processData function
+      const result = await processData(insights, dataType, file);
       
       if (result.success) {
         setAnalysisResult(result.data || {});
@@ -135,7 +136,95 @@ export default function HomeClient() {
         {analysisResult && (
           <Box w="full" p={6} borderWidth={1} borderRadius="md" bg="white">
             <Heading as="h2" size="md" mb={4}>Analysis Results</Heading>
-            <pre>{JSON.stringify(analysisResult, null, 2)}</pre>
+            
+            {/* Report Summary */}
+            {analysisResult.summary && (
+              <Box mb={6}>
+                <Heading as="h3" size="sm" mb={2}>Report Summary</Heading>
+                <Box p={3} bg="gray.50" borderRadius="md">
+                  {analysisResult.summary.title && (
+                    <Text fontWeight="bold">{analysisResult.summary.title}</Text>
+                  )}
+                  {analysisResult.summary.date && (
+                    <Text fontSize="sm" color="gray.600">Generated on: {analysisResult.summary.date}</Text>
+                  )}
+                </Box>
+              </Box>
+            )}
+            
+            {/* Recommendations */}
+            {analysisResult.recommendations && analysisResult.recommendations.length > 0 && (
+              <Box mb={6}>
+                <Heading as="h3" size="sm" mb={2}>Recommendations</Heading>
+                <Box p={3} bg="blue.50" borderRadius="md">
+                  {Array.isArray(analysisResult.recommendations) ? (
+                    <ul>
+                      {analysisResult.recommendations.map((rec, index) => (
+                        <li key={index}>{rec}</li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <Text>{String(analysisResult.recommendations)}</Text>
+                  )}
+                </Box>
+              </Box>
+            )}
+            
+            {/* Visualizations */}
+            {analysisResult.visualizations && analysisResult.visualizations.length > 0 && (
+              <Box mb={6}>
+                <Heading as="h3" size="sm" mb={2}>Visualizations</Heading>
+                <Box p={3} bg="green.50" borderRadius="md">
+                  <ul>
+                    {analysisResult.visualizations.map((viz, index) => (
+                      <li key={index}>
+                        <Text>
+                          <strong>{viz.type}</strong>: {viz.title || viz.data}
+                        </Text>
+                      </li>
+                    ))}
+                  </ul>
+                </Box>
+              </Box>
+            )}
+            
+            {/* Report Content */}
+            {analysisResult.content && (
+              <Box mb={6}>
+                <Heading as="h3" size="sm" mb={2}>Report Content</Heading>
+                <Box p={3} bg="purple.50" borderRadius="md">
+                  {analysisResult.content.title && (
+                    <Text fontWeight="bold" mb={2}>{analysisResult.content.title}</Text>
+                  )}
+                  
+                  {analysisResult.content.sections && (
+                    <Box>
+                      <Text fontWeight="bold" mb={1}>Sections:</Text>
+                      <ul>
+                        {analysisResult.content.sections.map((section, index) => (
+                          <li key={index}>{section}</li>
+                        ))}
+                      </ul>
+                    </Box>
+                  )}
+                </Box>
+              </Box>
+            )}
+            
+            {/* Raw JSON for debugging */}
+            <Box mt={6}>
+              <Heading as="h3" size="sm" mb={2}>Raw Data</Heading>
+              <Box 
+                p={3} 
+                bg="gray.100" 
+                borderRadius="md" 
+                fontSize="sm" 
+                fontFamily="monospace"
+                overflowX="auto"
+              >
+                <pre>{JSON.stringify(analysisResult, null, 2)}</pre>
+              </Box>
+            </Box>
           </Box>
         )}
       </VStack>
