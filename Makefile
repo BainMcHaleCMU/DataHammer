@@ -1,4 +1,8 @@
 .PHONY: backend
 
 backend:
-        cd backend && pip install -r requirements.txt && python main.py
+        cd backend && \
+        python -m venv venv && \
+        . venv/bin/activate && \
+        pip install -r requirements.txt && \
+        python main.py
