@@ -29,6 +29,51 @@ class AnalysisAgent(BaseAgent):
         super().__init__(name="AnalysisAgent")
         self.logger = logging.getLogger(__name__)
         self.task_agent = AnalysisTaskAgent()
+        
+    def prepare_environment_for_analysis(self, environment: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Prepare the environment for analysis by ensuring required structures exist.
+        
+        Args:
+            environment: The original environment
+            
+        Returns:
+            Prepared environment with necessary structures
+        """
+        # Create a copy to avoid modifying the original
+        prepared_env = environment.copy()
+        
+        # Ensure Cleaned Data structure exists
+        if "Cleaned Data" not in prepared_env:
+            # Check if we have cleaned_data in the root
+            if "cleaned_data" in prepared_env and isinstance(prepared_env["cleaned_data"], dict):
+                # Create the proper structure
+                prepared_env["Cleaned Data"] = {
+                    "processed_data": prepared_env["cleaned_data"],
+                    "cleaning_steps": {}
+                }
+            # Check if we have loaded_data as fallback
+            elif "loaded_data" in prepared_env and isinstance(prepared_env["loaded_data"], dict):
+                # Create the proper structure
+                prepared_env["Cleaned Data"] = {
+                    "processed_data": prepared_env["loaded_data"],
+                    "cleaning_steps": {}
+                }
+        
+        # Ensure Data Overview structure exists
+        if "Data Overview" not in prepared_env:
+            # Check if we have statistics in the root
+            if "statistics" in prepared_env and isinstance(prepared_env["statistics"], dict):
+                prepared_env["Data Overview"] = {
+                    "statistics": prepared_env["statistics"]
+                }
+            else:
+                # Create empty statistics structure
+                prepared_env["Data Overview"] = {
+                    "statistics": {}
+                }
+                
+        return prepared_env
     
     def generate_visualization_requests(self, insights: Dict[str, List[Dict[str, Any]]]) -> List[Dict[str, Any]]:
         """
@@ -192,9 +237,12 @@ class AnalysisAgent(BaseAgent):
         
         self.logger.info(f"Analyzing data: {data_reference}")
         
+        # Prepare the environment for analysis
+        prepared_environment = self.prepare_environment_for_analysis(environment)
+        
         # Use the task agent to analyze the data
         task_input = {
-            "environment": environment,
+            "environment": prepared_environment,
             "goals": kwargs.get("goals", ["Derive deeper insights from data"]),
             "data_reference": data_reference,
             "analysis_targets": analysis_targets
@@ -205,9 +253,10 @@ class AnalysisAgent(BaseAgent):
             result = self.task_agent.run(task_input)
             
             # Extract the results
-            insights = result.get("Analysis Results.insights", {})
-            findings = result.get("Analysis Results.findings", {})
-            errors = result.get("Analysis Results.errors", {})
+            # Try both key formats for backward compatibility
+            insights = result.get("Analysis Results.insights", result.get("Analysis.insights", {}))
+            findings = result.get("Analysis Results.findings", result.get("Analysis.findings", {}))
+            errors = result.get("Analysis Results.errors", result.get("Analysis.errors", {}))
             
             # Generate visualization requests based on insights
             visualization_requests = self.generate_visualization_requests(insights)
@@ -254,10 +303,26 @@ class AnalysisAgent(BaseAgent):
             self.logger.error(f"Error analyzing data: {str(e)}")
             self.logger.error(traceback.format_exc())
             
+            error_details = {
+                "error_message": str(e),
+                "error_type": type(e).__name__,
+                "traceback": traceback.format_exc()
+            }
+            
+            # Provide more helpful suggestions based on the error
+            suggestions = ["Check data format and try again"]
+            
+            if "KeyError" in error_details["error_type"]:
+                suggestions.append("Ensure all required data structures are present in the environment")
+            elif "TypeError" in error_details["error_type"]:
+                suggestions.append("Verify that data is in the correct format")
+            elif "ValueError" in error_details["error_type"]:
+                suggestions.append("Check for invalid values in the data")
+            
             return {
-                "error": str(e),
+                "error": error_details,
                 "analysis_results": {},
                 "insights": {},
                 "visualization_requests": [],
-                "suggestions": ["Check data format and try again"]
+                "suggestions": suggestions
             }
