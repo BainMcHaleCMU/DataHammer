@@ -63,9 +63,20 @@ export default function FileUpload({ onFileSelect, onFileDelete, selectedFile }:
       })
     }
   }, [toast, onFileSelect])
+  
+  const onDropRejected = useCallback(() => {
+    toast({
+      title: 'File not supported',
+      description: 'Please upload a file with a supported format (.csv, .xls, .xlsx, .json, .xml, .txt)',
+      status: 'error',
+      duration: 4000,
+      isClosable: true,
+    })
+  }, [toast])
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
+    onDropRejected,
     accept: {
       'text/csv': ['.csv'],
       'application/vnd.ms-excel': ['.xls'],
