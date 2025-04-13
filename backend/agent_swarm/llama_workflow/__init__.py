@@ -1,27 +1,25 @@
 """
-LlamaIndex Workflow Module
+LlamaIndex Workflow Package
 
-This module contains components for dynamic workflow planning and execution using LlamaIndex.
+This package provides workflow agents for data analysis and processing using LlamaIndex.
 """
 
-from .workflow_manager import WorkflowManager
-from .task_agents import (
-    DataLoadingTaskAgent,
-    ExplorationTaskAgent,
-    CleaningTaskAgent,
-    AnalysisTaskAgent,
-    ModelingTaskAgent,
-    VisualizationTaskAgent,
-    ReportingTaskAgent
-)
+from .base import BaseTaskAgent
+from .data_loading_agent import DataLoadingTaskAgent
+from .exploration_agent import ExplorationTaskAgent
+from .cleaning_agent import CleaningTaskAgent
+from .analysis_agent import AnalysisTaskAgent
+from .modeling_agent import ModelingTaskAgent
+from .visualization_agent import VisualizationTaskAgent
+from .reporting_agent import ReportingTaskAgent
 
 __all__ = [
-    "WorkflowManager",
+    "BaseTaskAgent",
     "DataLoadingTaskAgent",
     "ExplorationTaskAgent",
     "CleaningTaskAgent",
     "AnalysisTaskAgent",
     "ModelingTaskAgent",
     "VisualizationTaskAgent",
-    "ReportingTaskAgent"
+    "ReportingTaskAgent",
 ]
