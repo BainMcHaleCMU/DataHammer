@@ -12,9 +12,5 @@ google-generativeai==0.3.2
 networkx==3.2.1
 pydantic==1.10.8  # Using v1 for compatibility with llama-index
 
-# LlamaIndex dependencies - using compatible versions
-llama-index-core>=0.9.0,<0.10.0
-llama-index-llms-openai>=0.1.5,<0.2.0
-llama-index-agent-openai>=0.1.4,<0.2.0
-llama-index-experimental>=0.1.4,<0.2.0
-llama-index-llms-gemini>=0.1.4,<0.2.0
+# LlamaIndex dependencies - simplified to avoid dependency conflicts
+llama-index>=0.9.0,<0.10.0
