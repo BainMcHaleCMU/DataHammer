@@ -8,6 +8,7 @@ from typing import Any, Dict, List, Optional
 import os
 import argparse
 import json
+import logging
 
 from llama_index.llms.gemini import Gemini
 from llama_index.core.settings import Settings
@@ -24,6 +25,7 @@ from .agents import (
     ReportingAgent
 )
 from .environment import Environment
+from .llama_workflow import WorkflowManager
 
 
 def setup_llm(api_key: Optional[str] = None):

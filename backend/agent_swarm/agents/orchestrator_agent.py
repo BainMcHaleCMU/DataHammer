@@ -5,8 +5,11 @@ This module defines the OrchestratorAgent class that coordinates the AI Agent Sw
 """
 
 from typing import Any, Dict, List, Optional, Type
+import logging
+from datetime import datetime
 
 from .base_agent import BaseAgent
+from ..llama_workflow import WorkflowManager
 
 
 class OrchestratorAgent(BaseAgent):
@@ -27,6 +30,8 @@ class OrchestratorAgent(BaseAgent):
         super().__init__(name="OrchestratorAgent")
         self.available_agents = {}
         self.environment = self._initialize_environment()
+        self.workflow_manager = None
+        self.logger = logging.getLogger(__name__)
     
     def _initialize_environment(self) -> Dict[str, Any]:
         """
@@ -45,7 +50,11 @@ class OrchestratorAgent(BaseAgent):
             "Visualizations": {},
             "JupyterLogbook": None,
             "Available Agents": {},
-            "Execution State/Log": []
+            "Execution State/Log": [],
+            "Workflow": {
+                "Current": None,
+                "History": []
+            }
         }
     
     def register_agent(self, agent_class: Type[BaseAgent], agent_name: Optional[str] = None) -> None:
@@ -98,8 +107,44 @@ class OrchestratorAgent(BaseAgent):
         # Log the initialization
         self._log_execution_state("Orchestrator initialized", "System initialized with goals and data sources")
         
-        # TODO: Implement the dynamic workflow planning and execution
-        # This is a placeholder for the actual implementation
+        # Initialize workflow manager if not already done
+        if self.workflow_manager is None:
+            self.workflow_manager = WorkflowManager()
+            self.workflow_manager.register_default_agents()
+        
+        # Create the workflow
+        self._log_execution_state("Planning workflow", f"Planning workflow based on goals: {env['Goals']}")
+        workflow = self.workflow_manager.create_workflow(env["Goals"], env)
+        
+        # Store the workflow execution log in the environment
+        env["Workflow"]["Current"] = {
+            "execution_log": self.workflow_manager.execution_log
+        }
+        
+        # Log the workflow plan
+        self._log_execution_state(
+            "Workflow planned", 
+            f"Created workflow with LlamaIndex AgentWorkflow"
+        )
+        
+        # Execute the workflow
+        self._log_execution_state("Executing workflow", "Starting workflow execution")
+        updated_env = self.workflow_manager.execute_workflow(env)
+        
+        # Update the environment with the workflow execution results
+        env.update(updated_env)
+        
+        # Update workflow status in the environment
+        env["Workflow"]["Current"]["execution_log"] = self.workflow_manager.execution_log
+        
+        # Archive the current workflow in history
+        env["Workflow"]["History"].append(env["Workflow"]["Current"])
+        
+        # Log the completion
+        self._log_execution_state(
+            "Workflow execution completed", 
+            "Workflow execution completed successfully"
+        )
         
         return env
     
@@ -124,9 +169,10 @@ class OrchestratorAgent(BaseAgent):
         log_entry = {
             "action": action,
             "details": details,
-            "timestamp": "placeholder_timestamp"  # TODO: Add actual timestamp
+            "timestamp": datetime.now().isoformat()
         }
         self.environment["Execution State/Log"].append(log_entry)
+        self.logger.info(f"{action}: {details}")
     
     def invoke_agent(self, agent_name: str, **kwargs) -> Dict[str, Any]:
         """
@@ -156,8 +202,11 @@ class OrchestratorAgent(BaseAgent):
         # Run the agent with the current environment
         result = agent.run(self.environment, **kwargs)
         
-        # Update the environment with the agent's results
-        # TODO: Implement environment update logic
+        # Log the agent completion
+        self._log_execution_state(
+            f"{agent_name} completed",
+            f"Agent completed task: {kwargs.get('task', 'unknown')}"
+        )
         
         return result
     
