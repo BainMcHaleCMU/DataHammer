@@ -190,18 +190,19 @@ class WorkflowManager:
         
         return tasks
     
-    def execute_workflow(self, environment: Dict[str, Any]) -> Dict[str, Any]:
+    def execute_workflow(self, workflow: AgentWorkflow, environment: Dict[str, Any]) -> Dict[str, Any]:
         """
         Execute the workflow and update the environment.
         
         Args:
+            workflow: The workflow to execute
             environment: The shared environment state
             
         Returns:
             Updated environment after workflow execution
         """
-        if not self.workflow:
-            raise ValueError("No workflow created. Call create_workflow first.")
+        if not workflow:
+            raise ValueError("No workflow provided.")
         
         # Execute the workflow
         self.logger.info("Starting workflow execution")
@@ -211,7 +212,7 @@ class WorkflowManager:
         env = environment.copy()
         
         # Execute the workflow
-        results = self.workflow.execute()
+        results = workflow.execute()
         
         # Process the results and update the environment
         for task_id, task_output in results.items():
