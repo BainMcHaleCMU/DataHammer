@@ -38,7 +38,7 @@ def setup_llm(api_key: Optional[str] = None):
         os.environ["GOOGLE_API_KEY"] = api_key
     
     # Verify the correct model identifier string with Google/LlamaIndex docs
-    flash_model_name = "models/gemini-1.5-flash-latest"
+    flash_model_name = "models/gemini-2.0-flash-lite"
     Settings.llm = Gemini(model=flash_model_name)
     
     # Configure embedding model if needed
