@@ -7,12 +7,17 @@ import {
   Center,
   Icon,
   Text,
-  useToast
+  useToast,
+  Button,
+  Flex,
+  CloseButton
 } from '@chakra-ui/react'
 
-// Add dataType to the props
+// Update props to include onFileDelete
 interface FileUploadProps {
   onFileSelect: (file: File, dataType: string) => void;
+  onFileDelete?: () => void;
+  selectedFile: File | null;
 }
 
 // Helper function to infer data type from file extension
@@ -36,14 +41,12 @@ const inferDataType = (filename: string): string => {
   }
 };
 
-export default function FileUpload({ onFileSelect }: FileUploadProps) {
-  const [file, setFile] = useState<File | null>(null)
+export default function FileUpload({ onFileSelect, onFileDelete, selectedFile }: FileUploadProps) {
   const toast = useToast()
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     if (acceptedFiles.length > 0) {
       const selectedFile = acceptedFiles[0];
-      setFile(selectedFile);
       
       // Infer the data type from the file extension
       const dataType = inferDataType(selectedFile.name);
@@ -74,6 +77,47 @@ export default function FileUpload({ onFileSelect }: FileUploadProps) {
     },
     maxFiles: 1
   })
+
+  // If we have a file, display it with delete option
+  if (selectedFile) {
+    return (
+      <Box
+        w="full"
+        p={4}
+        borderWidth={1}
+        borderRadius="md"
+        borderColor="gray.300"
+        bg="gray.50"
+      >
+        <Flex justify="space-between" align="center">
+          <Box>
+            <Text fontWeight="bold">Selected file:</Text>
+            <Text>{selectedFile.name} ({(selectedFile.size / 1024).toFixed(2)} KB)</Text>
+            <Text fontSize="sm" color="gray.500">
+              Type: {inferDataType(selectedFile.name).toUpperCase()}
+            </Text>
+          </Box>
+          <CloseButton 
+            onClick={() => {
+              if (onFileDelete) {
+                onFileDelete();
+                toast({
+                  title: 'File removed',
+                  description: 'You can now upload another file',
+                  status: 'info',
+                  duration: 3000,
+                  isClosable: true,
+                });
+              }
+            }} 
+            size="md"
+            colorScheme="red"
+            aria-label="Remove file"
+          />
+        </Flex>
+      </Box>
+    )
+  }
 
   return (
     <Box
