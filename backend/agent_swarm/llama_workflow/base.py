@@ -10,10 +10,11 @@ from abc import ABC, abstractmethod
 
 from llama_index.core.llms import LLM
 from llama_index.core.settings import Settings
-from llama_index.experimental.agent_workflow import TaskAgent
+
+# from llama_index.experimental.agent_workflow import TaskAgent
 
 
-class BaseTaskAgent(TaskAgent, ABC):
+class BaseTaskAgent(ABC):
     """
     Base class for all task agents in the workflow.
 
