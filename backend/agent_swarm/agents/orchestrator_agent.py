@@ -9,7 +9,7 @@ import logging
 from datetime import datetime
 
 from .base_agent import BaseAgent
-from ..llama_workflow import WorkflowManager
+from ..llama_workflow.workflow_manager import WorkflowManager
 
 
 class OrchestratorAgent(BaseAgent):
