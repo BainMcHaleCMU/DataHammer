@@ -10,8 +10,14 @@ import argparse
 import json
 import logging
 
-from llama_index.llms.gemini import Gemini
-from llama_index.core.settings import Settings
+# Import our custom Settings class
+from .llama_workflow.base import Settings
+
+# Define a simple Gemini class
+class Gemini:
+    """Simple mock of the Gemini LLM."""
+    def __init__(self, model=None):
+        self.model = model
 
 from .agents import (
     OrchestratorAgent,

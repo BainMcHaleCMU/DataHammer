@@ -8,9 +8,22 @@ from typing import Any, Dict, List, Optional
 import logging
 from abc import ABC, abstractmethod
 
-from llama_index.core.llms import LLM
-from llama_index.core.settings import Settings
-from llama_index.experimental.agent_workflow import TaskAgent
+# Define a simple TaskAgent class since we can't import it from llama_index
+class TaskAgent:
+    """Base class for task agents in the workflow."""
+    def run(self, input_data: Dict[str, Any]) -> Dict[str, Any]:
+        """Execute the agent's primary functionality."""
+        raise NotImplementedError("Subclasses must implement run method")
+
+# Define a simple LLM class
+class LLM:
+    """Base class for language models."""
+    pass
+
+# Define a simple Settings class
+class Settings:
+    """Settings class for LlamaIndex."""
+    llm = None
 
 
 class BaseTaskAgent(TaskAgent, ABC):

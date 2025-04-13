@@ -4,7 +4,8 @@ LlamaIndex Workflow Package
 This package provides workflow agents for data analysis and processing using LlamaIndex.
 """
 
-from .base import BaseTaskAgent
+from .base import BaseTaskAgent, LLM, Settings, TaskAgent
+from .workflow_manager import WorkflowManager, AgentWorkflow, WorkflowTask, TaskOutput
 from .data_loading_agent import DataLoadingTaskAgent
 from .exploration_agent import ExplorationTaskAgent
 from .cleaning_agent import CleaningTaskAgent
@@ -15,6 +16,13 @@ from .reporting_agent import ReportingTaskAgent
 
 __all__ = [
     "BaseTaskAgent",
+    "LLM",
+    "Settings",
+    "TaskAgent",
+    "WorkflowManager",
+    "AgentWorkflow",
+    "WorkflowTask",
+    "TaskOutput",
     "DataLoadingTaskAgent",
     "ExplorationTaskAgent",
     "CleaningTaskAgent",

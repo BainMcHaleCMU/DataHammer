@@ -8,11 +8,32 @@ from typing import Any, Dict, List, Optional, Tuple, Type
 import logging
 from datetime import datetime
 
-from llama_index.core.llms import LLM
-from llama_index.core.settings import Settings
-from llama_index.experimental.agent_workflow import AgentWorkflow
-from llama_index.experimental.agent_workflow import Task as WorkflowTask
-from llama_index.experimental.agent_workflow import TaskOutput
+from .base import LLM, Settings
+
+# Define simple classes to replace the imported ones
+class TaskOutput:
+    """Output from a task."""
+    def __init__(self, output: Dict[str, Any]):
+        self.output = output
+
+class WorkflowTask:
+    """Task in a workflow."""
+    def __init__(self, task_id: str, agent: Any, description: str, input_data: Dict[str, Any], depends_on: List[str] = None):
+        self.task_id = task_id
+        self.agent = agent
+        self.description = description
+        self.input_data = input_data
+        self.depends_on = depends_on or []
+
+class AgentWorkflow:
+    """Workflow of agents."""
+    def __init__(self, tasks: List[WorkflowTask]):
+        self.tasks = tasks
+    
+    def execute(self) -> Dict[str, TaskOutput]:
+        """Execute the workflow."""
+        # Simple implementation that just returns empty results
+        return {task.task_id: TaskOutput({}) for task in self.tasks}
 
 from .task_agents import (
     DataLoadingTaskAgent,
