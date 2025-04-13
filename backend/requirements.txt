@@ -11,3 +11,5 @@ llama-index-llms-gemini==0.1.4
 nbformat==5.9.2
 jupyter==1.0.0
 google-generativeai==0.3.2
+networkx==3.3
+pydantic==2.6.3
