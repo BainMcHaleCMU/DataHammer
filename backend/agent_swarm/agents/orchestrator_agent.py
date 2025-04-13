@@ -86,6 +86,7 @@ class OrchestratorAgent(BaseAgent):
             **kwargs: Additional arguments
                 - goals: List of user-defined goals
                 - data_sources: Dict of data source references
+                - workflow_type: Optional type of workflow to execute
                 
         Returns:
             Dict containing the final Environment state
@@ -99,6 +100,8 @@ class OrchestratorAgent(BaseAgent):
         
         if "data_sources" in kwargs:
             env["Data"] = kwargs["data_sources"]
+        
+        workflow_type = kwargs.get("workflow_type", "auto")
         
         # Initialize JupyterLogbook if not already done
         if env["JupyterLogbook"] is None:
@@ -118,7 +121,8 @@ class OrchestratorAgent(BaseAgent):
         
         # Store the workflow execution log in the environment
         env["Workflow"]["Current"] = {
-            "execution_log": self.workflow_manager.execution_log
+            "execution_log": self.workflow_manager.execution_log,
+            "type": workflow_type
         }
         
         # Log the workflow plan
@@ -129,22 +133,38 @@ class OrchestratorAgent(BaseAgent):
         
         # Execute the workflow
         self._log_execution_state("Executing workflow", "Starting workflow execution")
-        updated_env = self.workflow_manager.execute_workflow(env)
         
-        # Update the environment with the workflow execution results
-        env.update(updated_env)
-        
-        # Update workflow status in the environment
-        env["Workflow"]["Current"]["execution_log"] = self.workflow_manager.execution_log
+        try:
+            # Execute the workflow
+            updated_env = self.workflow_manager.execute_workflow(workflow, env)
+            
+            # Update the environment with the workflow execution results
+            env.update(updated_env)
+            
+            # Update workflow status in the environment
+            env["Workflow"]["Current"]["execution_log"] = self.workflow_manager.execution_log
+            env["Workflow"]["Current"]["status"] = "completed"
+            
+            # Log the completion
+            self._log_execution_state(
+                "Workflow execution completed", 
+                "Workflow execution completed successfully"
+            )
+        except Exception as e:
+            # Log the error
+            self.logger.error(f"Error executing workflow: {str(e)}")
+            self._log_execution_state(
+                "Workflow execution failed",
+                f"Error: {str(e)}"
+            )
+            
+            # Update workflow status in the environment
+            env["Workflow"]["Current"]["status"] = "failed"
+            env["Workflow"]["Current"]["error"] = str(e)
+            env["Workflow"]["Current"]["execution_log"] = self.workflow_manager.execution_log
         
         # Archive the current workflow in history
         env["Workflow"]["History"].append(env["Workflow"]["Current"])
-        
-        # Log the completion
-        self._log_execution_state(
-            "Workflow execution completed", 
-            "Workflow execution completed successfully"
-        )
         
         return env
     
