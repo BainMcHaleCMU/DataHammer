@@ -4,9 +4,8 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-  // Add basePath for GitHub Pages deployment
-  // Comment this out for local development
-  basePath: '/DataHammer',
+  // Add basePath for GitHub Pages deployment only in production
+  basePath: process.env.NODE_ENV === 'production' ? '/DataHammer' : '',
 };
 
 module.exports = nextConfig;
