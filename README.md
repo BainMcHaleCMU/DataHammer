@@ -15,14 +15,14 @@ A completely revamped Next.js application with Chakra UI and TypeScript for data
 - Data visualization
 - Insights generation
 - Predictive modeling
-- Firebase integration for data storage
+- Local data processing
 - GitHub Pages deployment
 
 ## Tech Stack
 
 - **Frontend**: Next.js, TypeScript, Chakra UI, React Dropzone
 - **Backend**: FastAPI, Pandas, NumPy, Scikit-learn, Matplotlib, Seaborn
-- **Database**: Firebase Firestore
+- **Database**: Local storage (demo only)
 - **Deployment**: GitHub Pages
 
 ## Getting Started
@@ -55,16 +55,7 @@ A completely revamped Next.js application with Chakra UI and TypeScript for data
 
 ### Configuration
 
-1. Create a Firebase project and add your configuration to `.env.local`:
-   ```
-   NEXT_PUBLIC_FIREBASE_API_KEY=your-api-key
-   NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your-auth-domain
-   NEXT_PUBLIC_FIREBASE_PROJECT_ID=your-project-id
-   NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your-storage-bucket
-   NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your-messaging-sender-id
-   NEXT_PUBLIC_FIREBASE_APP_ID=your-app-id
-   NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=your-measurement-id
-   ```
+No additional configuration is needed for the demo version.
 
 ### Running the Application
 
@@ -114,4 +105,4 @@ To configure GitHub Pages:
 1. Go to your repository settings
 2. Navigate to Pages
 3. Select the `gh-pages` branch as the source
-4. Add your Firebase secrets to the repository secrets
+4. No additional configuration is needed for the demo version
