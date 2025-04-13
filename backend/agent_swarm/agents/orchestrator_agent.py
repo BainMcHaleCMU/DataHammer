@@ -9,7 +9,7 @@ import logging
 from datetime import datetime
 
 from .base_agent import BaseAgent
-from ..workflow import WorkflowPlanner, WorkflowExecutor, WorkflowGraph
+from ..llama_workflow import WorkflowManager
 
 
 class OrchestratorAgent(BaseAgent):
@@ -30,8 +30,7 @@ class OrchestratorAgent(BaseAgent):
         super().__init__(name="OrchestratorAgent")
         self.available_agents = {}
         self.environment = self._initialize_environment()
-        self.workflow_planner = None
-        self.workflow_executor = None
+        self.workflow_manager = None
         self.logger = logging.getLogger(__name__)
     
     def _initialize_environment(self) -> Dict[str, Any]:
@@ -108,51 +107,35 @@ class OrchestratorAgent(BaseAgent):
         # Log the initialization
         self._log_execution_state("Orchestrator initialized", "System initialized with goals and data sources")
         
-        # Initialize workflow components if not already done
-        if self.workflow_planner is None:
-            self.workflow_planner = WorkflowPlanner()
+        # Initialize workflow manager if not already done
+        if self.workflow_manager is None:
+            self.workflow_manager = WorkflowManager()
+            self.workflow_manager.register_default_agents()
         
-        if self.workflow_executor is None:
-            self.workflow_executor = WorkflowExecutor()
-        
-        # Plan the workflow
+        # Create the workflow
         self._log_execution_state("Planning workflow", f"Planning workflow based on goals: {env['Goals']}")
-        workflow = self.workflow_planner.create_workflow(env["Goals"], env)
+        workflow = self.workflow_manager.create_workflow(env["Goals"], env)
         
-        # Store the workflow in the environment
+        # Store the workflow execution log in the environment
         env["Workflow"]["Current"] = {
-            "steps": {step.id: {
-                "id": step.id,
-                "agent_name": step.agent_name,
-                "task": step.task,
-                "description": step.description,
-                "status": step.status,
-                "dependencies": step.dependencies
-            } for step in workflow.get_all_steps()},
-            "execution_order": workflow.get_execution_order()
+            "execution_log": self.workflow_manager.execution_log
         }
         
         # Log the workflow plan
         self._log_execution_state(
             "Workflow planned", 
-            f"Created workflow with {len(workflow.get_all_steps())} steps"
+            f"Created workflow with LlamaIndex AgentWorkflow"
         )
         
         # Execute the workflow
         self._log_execution_state("Executing workflow", "Starting workflow execution")
-        updated_env = self.workflow_executor.execute_workflow(
-            workflow, env, self.invoke_agent
-        )
+        updated_env = self.workflow_manager.execute_workflow(env)
         
         # Update the environment with the workflow execution results
         env.update(updated_env)
         
         # Update workflow status in the environment
-        env["Workflow"]["Current"]["status"] = {
-            "completed_steps": list(workflow.completed_steps),
-            "failed_steps": list(workflow.failed_steps),
-            "total_steps": len(workflow.steps)
-        }
+        env["Workflow"]["Current"]["execution_log"] = self.workflow_manager.execution_log
         
         # Archive the current workflow in history
         env["Workflow"]["History"].append(env["Workflow"]["Current"])
@@ -160,7 +143,7 @@ class OrchestratorAgent(BaseAgent):
         # Log the completion
         self._log_execution_state(
             "Workflow execution completed", 
-            f"Completed {len(workflow.completed_steps)}/{len(workflow.steps)} steps"
+            "Workflow execution completed successfully"
         )
         
         return env
@@ -237,46 +220,3 @@ class OrchestratorAgent(BaseAgent):
         """
         # TODO: Implement notebook update logic using nbformat
         pass
-    
-    def replan_workflow(self, environment: Dict[str, Any] = None) -> WorkflowGraph:
-        """
-        Replan the workflow based on the current environment state.
-        
-        This is useful when the environment has changed significantly or when
-        the current workflow has failed steps.
-        
-        Args:
-            environment: Optional external environment state to use
-            
-        Returns:
-            The new workflow graph
-        """
-        # Use provided environment or the internal one
-        env = environment if environment is not None else self.environment
-        
-        # Log the replanning
-        self._log_execution_state("Replanning workflow", "Replanning workflow based on current state")
-        
-        # Create a new workflow plan
-        workflow = self.workflow_planner.create_workflow(env["Goals"], env)
-        
-        # Store the workflow in the environment
-        env["Workflow"]["Current"] = {
-            "steps": {step.id: {
-                "id": step.id,
-                "agent_name": step.agent_name,
-                "task": step.task,
-                "description": step.description,
-                "status": step.status,
-                "dependencies": step.dependencies
-            } for step in workflow.get_all_steps()},
-            "execution_order": workflow.get_execution_order()
-        }
-        
-        # Log the workflow plan
-        self._log_execution_state(
-            "Workflow replanned", 
-            f"Created new workflow with {len(workflow.get_all_steps())} steps"
-        )
-        
-        return workflow

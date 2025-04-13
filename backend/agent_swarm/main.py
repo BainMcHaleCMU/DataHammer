@@ -25,7 +25,7 @@ from .agents import (
     ReportingAgent
 )
 from .environment import Environment
-from .workflow import WorkflowPlanner, WorkflowExecutor, WorkflowGraph, WorkflowStep
+from .llama_workflow import WorkflowManager
 
 
 def setup_llm(api_key: Optional[str] = None):
