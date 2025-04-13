@@ -16,5 +16,5 @@ pydantic==1.10.8  # Using v1 for compatibility with llama-index
 llama-index-core==0.9.48  # Pinning to a specific version for stability
 llama-index-llms-openai==0.1.5
 llama-index-agent-openai==0.1.4
-llama-index-experimental==0.1.12
+llama-index-experimental==0.1.4
 llama-index-llms-gemini==0.1.4
