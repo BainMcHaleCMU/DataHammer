@@ -1,7 +1,7 @@
 """
 Cleaning Task Agent Module
 
-This module defines the cleaning task agent used in LlamaIndex agent workflows.
+This module defines the cleaning task agent used in agent workflows.
 """
 
 from typing import Any, Dict, List, Optional, Union, Callable
@@ -9,7 +9,7 @@ import logging
 import traceback
 from enum import Enum
 
-from llama_index.core.llms import LLM
+from ..custom_framework.llm import LLM
 
 from .base import BaseTaskAgent
 

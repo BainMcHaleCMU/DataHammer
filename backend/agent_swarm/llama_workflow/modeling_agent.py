@@ -1,7 +1,7 @@
 """
 Modeling Task Agent Module
 
-This module defines the modeling task agent used in LlamaIndex agent workflows.
+This module defines the modeling task agent used in agent workflows.
 """
 
 from typing import Any, Dict, List, Optional, Tuple, Union
@@ -9,7 +9,7 @@ import logging
 from datetime import datetime
 import traceback
 
-from llama_index.core.llms import LLM
+from ..custom_framework.llm import LLM
 
 from .base import BaseTaskAgent
 

@@ -128,7 +128,7 @@ class OrchestratorAgent(BaseAgent):
         # Log the workflow plan
         self._log_execution_state(
             "Workflow planned", 
-            f"Created workflow with LlamaIndex AgentWorkflow"
+            f"Created workflow with custom AgentWorkflow"
         )
         
         # Execute the workflow

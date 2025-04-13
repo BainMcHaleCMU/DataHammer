@@ -1,6 +1,6 @@
 # Dynamic Workflow Planning and Execution
 
-This module provides dynamic workflow planning and execution capabilities for the DataHammer AI Agent Swarm, inspired by LlamaIndex's multiagent workflow approach.
+This module provides dynamic workflow planning and execution capabilities for the DataHammer AI Agent Swarm, using a custom multiagent workflow approach.
 
 ## Components
 
@@ -76,9 +76,9 @@ The workflow system includes error handling and recovery mechanisms:
 - The WorkflowPlanner can generate recovery plans for failed steps
 - The workflow can be replanned if necessary
 
-## Integration with LlamaIndex
+## Workflow Features
 
-This workflow system is inspired by LlamaIndex's multiagent workflow approach, which uses:
+This workflow system includes:
 - Agent handoffs for sequential processing
 - Specialized agent roles for different tasks
 - Dynamic task planning based on goals

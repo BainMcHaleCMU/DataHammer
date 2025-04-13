@@ -2,7 +2,7 @@
 AI Agent Swarm for Data Science
 
 This package implements an AI Agent Swarm for automating the end-to-end data science workflow.
-The system leverages a multi-agent architecture built using LlamaIndex and powered by
+The system leverages a multi-agent architecture built using a custom framework and powered by
 Google's Gemini language model.
 """
 
