@@ -29,6 +29,7 @@ A completely revamped Next.js application with Chakra UI and TypeScript for data
 - Node.js (v18 or higher)
 - Python (v3.8 or higher)
 - pip (Python package manager)
+- Docker and Docker Compose (for containerized deployment)
 
 ### Installation
 
@@ -63,6 +64,25 @@ A completely revamped Next.js application with Chakra UI and TypeScript for data
    ```
 
 ### Running the Application
+
+#### Using Docker (Recommended)
+
+1. Start the backend server using Docker:
+   ```bash
+   make backend
+   ```
+
+2. To stop the backend:
+   ```bash
+   make backend-stop
+   ```
+
+3. To view backend logs:
+   ```bash
+   make backend-logs
+   ```
+
+#### Manual Setup
 
 1. Start the backend server:
    ```bash
