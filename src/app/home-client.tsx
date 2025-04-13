@@ -83,6 +83,13 @@ export default function HomeClient() {
     setDataType(inferredDataType);
   };
 
+  // Add handler for file deletion
+  const handleFileDelete = () => {
+    setFile(null);
+    setDataType('csv');
+    setAnalysisResult(null);
+  };
+
   return (
     <Box as="main" minH="100vh" py={8} px={4}>
       <VStack spacing={8} align="stretch" maxW="800px" mx="auto">
@@ -103,37 +110,13 @@ export default function HomeClient() {
           />
         </Box>
         
-        {/* File Upload Component - Now passes data type to parent */}
+        {/* File Upload Component - Now handles file display and deletion internally */}
         <Box w="full">
-          <FileUpload onFileSelect={handleFileSelected} />
-        </Box>
-        
-        {/* Display selected file name */}
-        {file && (
-          <Box w="full" p={4} borderWidth={1} borderRadius="md">
-            <Text fontWeight="bold">Selected file:</Text>
-            <Text>{file.name} ({(file.size / 1024).toFixed(2)} KB)</Text>
-          </Box>
-        )}
-        
-        {/* Data Type Selector - Now shows the inferred type but can be changed manually */}
-        <Box w="full">
-          <Text mb={2} fontWeight="bold">Data Type: <Text as="span" fontSize="sm" color="gray.500">(Auto-detected from file, can be changed if needed)</Text></Text>
-          <select
-            value={dataType}
-            onChange={(e) => setDataType(e.target.value)}
-            style={{ 
-              width: '100%', 
-              padding: '8px', 
-              borderRadius: '4px', 
-              border: '1px solid #E2E8F0' 
-            }}
-          >
-            <option value="csv">CSV</option>
-            <option value="json">JSON</option>
-            <option value="xml">XML</option>
-            <option value="text">Plain Text</option>
-          </select>
+          <FileUpload 
+            onFileSelect={handleFileSelected} 
+            onFileDelete={handleFileDelete}
+            selectedFile={file}
+          />
         </Box>
         
         {/* Analyze Button */}
