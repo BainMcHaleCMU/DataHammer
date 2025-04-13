@@ -7,6 +7,9 @@ A completely revamped Next.js application with Chakra UI and TypeScript for data
 ## Features
 
 - File upload interface for spreadsheet data (CSV, XLS, XLSX)
+- Natural language data processing instructions
+- User-friendly interface for describing data operations
+- Support for multiple data formats (CSV, JSON, XML, Plain Text)
 - Data cleaning and preprocessing
 - Exploratory data analysis
 - Data visualization
