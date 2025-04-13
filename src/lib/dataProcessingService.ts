@@ -1,6 +1,6 @@
 /**
- * Mock service for data processing
- * This would be replaced with actual API calls in a real implementation
+ * Service for data processing and report generation
+ * Connects to the backend API
  */
 
 export interface ProcessingResult {
@@ -10,46 +10,77 @@ export interface ProcessingResult {
   error?: string;
 }
 
+// Base URL for API calls
+const API_BASE_URL = 'http://localhost:12001';
+
 /**
  * Process data based on user instructions
  * @param instructions User-provided instructions for data processing
  * @param dataType Type of data to process (csv, json, xml, text)
+ * @param file The file to process
  * @returns Promise with processing result
  */
 export const processData = async (
   instructions: string,
-  dataType: string
+  dataType: string,
+  file?: File
 ): Promise<ProcessingResult> => {
-  // This is a mock implementation
-  // In a real app, this would call a backend API
-  
   console.log(`Processing ${dataType} data with instructions: ${instructions}`);
   
-  // Simulate API call with timeout
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      // Mock successful response
-      resolve({
+  try {
+    // If no file is provided, return a mock response
+    if (!file) {
+      console.warn('No file provided, returning mock response');
+      return {
         success: true,
-        message: 'Data processed successfully',
+        message: 'Data processed successfully (mock)',
         data: {
-          summary: 'Processed data according to instructions',
+          summary: 'Processed data according to instructions (mock)',
           dataType,
           instructionsApplied: instructions,
           timestamp: new Date().toISOString(),
         },
-      });
-      
-      // For error simulation, uncomment this:
-      /*
-      resolve({
-        success: false,
-        message: 'Failed to process data',
-        error: 'Invalid instructions format',
-      });
-      */
-    }, 1500); // Simulate 1.5s processing time
-  });
+      };
+    }
+    
+    // Create form data for the API request
+    const formData = new FormData();
+    formData.append('file', file);
+    
+    // Parse instructions into goals
+    const goals = instructions.split('\n')
+      .filter(line => line.trim().length > 0)
+      .map(line => line.trim());
+    
+    // Add goals to form data
+    formData.append('goals', JSON.stringify(goals));
+    
+    // Make API request to the reporting endpoint
+    const response = await fetch(`${API_BASE_URL}/agent-swarm/report`, {
+      method: 'POST',
+      body: formData,
+    });
+    
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.detail || 'Failed to process data');
+    }
+    
+    const responseData = await response.json();
+    
+    return {
+      success: true,
+      message: 'Data processed successfully',
+      data: responseData.report,
+    };
+  } catch (error) {
+    console.error('Error processing data:', error);
+    return {
+      success: false,
+      message: 'Failed to process data',
+      error: error instanceof Error ? error.message : 'Unknown error',
+    };
+  }
 };
 
 /**
