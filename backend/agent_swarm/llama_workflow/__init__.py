@@ -1,7 +1,7 @@
 """
-LlamaIndex Workflow Package
+Agent Workflow Package
 
-This package provides workflow agents for data analysis and processing using LlamaIndex.
+This package provides workflow agents for data analysis and processing using a custom framework.
 """
 
 from .base import BaseTaskAgent

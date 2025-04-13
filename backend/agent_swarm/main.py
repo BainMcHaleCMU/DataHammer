@@ -10,8 +10,8 @@ import argparse
 import json
 import logging
 
-from llama_index.llms.gemini import Gemini
-from llama_index.core.settings import Settings
+from .custom_framework.llm import Gemini
+from .custom_framework.settings import Settings
 
 from .agents import (
     OrchestratorAgent,
@@ -24,8 +24,8 @@ from .agents import (
     CodeActAgent,
     ReportingAgent
 )
-from .environment import Environment
-from .llama_workflow import WorkflowManager
+# from .environment import Environment
+# from .llama_workflow import WorkflowManager
 
 
 def setup_llm(api_key: Optional[str] = None):
@@ -39,7 +39,7 @@ def setup_llm(api_key: Optional[str] = None):
     if api_key:
         os.environ["GOOGLE_API_KEY"] = api_key
     
-    # Verify the correct model identifier string with Google/LlamaIndex docs
+    # Verify the correct model identifier string with Google docs
     flash_model_name = "models/gemini-2.0-flash-lite"
     Settings.llm = Gemini(model=flash_model_name)
     

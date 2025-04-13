@@ -1,7 +1,7 @@
 """
 Data Loading Task Agent Module
 
-This module defines the data loading task agent used in LlamaIndex agent workflows.
+This module defines the data loading task agent used in agent workflows.
 """
 
 from typing import Any, Dict, List, Optional, Tuple
@@ -18,7 +18,7 @@ import requests
 from io import StringIO
 import traceback
 
-from llama_index.core.llms import LLM
+from ..custom_framework.llm import LLM
 
 from .base import BaseTaskAgent
 

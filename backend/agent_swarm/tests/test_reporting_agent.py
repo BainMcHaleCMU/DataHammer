@@ -114,7 +114,7 @@ class TestReportingTaskAgent(unittest.TestCase):
         self.assertIn("dataset1", cells[1]["source"])
         self.assertIn("Strong correlation between X and Y", cells[1]["source"])
 
-    @patch('llama_index.core.settings.Settings')
+    @patch('agent_swarm.custom_framework.settings.Settings')
     def test_run_minimal_input(self, mock_settings):
         """Test run method with minimal input."""
         # Mock the LLM to avoid actual API calls
@@ -133,7 +133,7 @@ class TestReportingTaskAgent(unittest.TestCase):
         # Check that the report path exists
         self.assertTrue(os.path.exists(self.test_dir))
 
-    @patch('llama_index.core.settings.Settings')
+    @patch('agent_swarm.custom_framework.settings.Settings')
     def test_run_error_handling(self, mock_settings):
         """Test error handling in run method."""
         # Mock the LLM to raise an exception

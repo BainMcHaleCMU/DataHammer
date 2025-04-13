@@ -1,7 +1,7 @@
 """
 Exploration Task Agent Module
 
-This module defines the exploration task agent used in LlamaIndex agent workflows.
+This module defines the exploration task agent used in agent workflows.
 """
 
 from typing import Any, Dict, List, Optional, Union, Tuple
@@ -12,7 +12,7 @@ import numpy as np
 from datetime import datetime
 import json
 
-from llama_index.core.llms import LLM
+from ..custom_framework.llm import LLM
 
 from .base import BaseTaskAgent
 
